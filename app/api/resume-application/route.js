@@ -1,4 +1,4 @@
-import { supabaseAdmin } from '@/lib/supabaseAdmin'
+import supabaseAdmin from '@/lib/supabaseAdmin'
 
 export async function POST(req) {
   const { phone } = await req.json()
