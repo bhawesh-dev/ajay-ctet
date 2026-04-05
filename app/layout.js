@@ -15,7 +15,7 @@ export const metadata = {
   title: 'Ajay CTET Classes',
   description: 'Ajay CTET Classes provides CTET preparation, scholarship tests, and classroom coaching for aspiring teachers.',
   icons: {
-    icon: '/logo.png',
+    icon: '/logo.PNG',
   },
 }
 

@@ -174,7 +174,7 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
       {/* NAVBAR */}
       <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 bg-blue-900/90 backdrop-blur text-white shadow">
         <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
-          <img src="/logo.png" alt="logo" className="w-8 h-8 rounded-full" />
+          <img src="/logo.PNG" alt="logo" className="w-8 h-8 rounded-full" />
           <span className="font-semibold">Ajay CTET Classes</span>
         </div>
         <button
@@ -429,7 +429,7 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
 
         {/* LEFT SIDE */}
         <div className="flex items-start gap-3">
-          <img src="/logo.png" alt="logo" className="w-10 h-10 rounded-full" />
+          <img src="/logo.PNG" alt="logo" className="w-10 h-10 rounded-full" />
           <div>
             <h3 className="font-semibold text-lg">Ajay CTET Classes</h3>
             <p className="text-sm text-gray-300 mt-1">

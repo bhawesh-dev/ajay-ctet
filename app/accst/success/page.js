@@ -104,7 +104,7 @@ function SuccessPageInner() {
         {/* HEADER */}
         <div className="border-b pb-4">
           <div className="flex items-center justify-between">
-            <img src="/logo.png" className="w-16 h-16" />
+            <img src="/logo.PNG" className="w-16 h-16" />
             <div className="text-center flex-1">
               <h2 className="text-xl font-extrabold tracking-wide leading-tight">AJAY CTET CLASSES</h2>
               <p className="text-sm font-medium">Scholarship Test (ACCST)</p>
