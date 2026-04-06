@@ -118,7 +118,12 @@ function SuccessPageInner() {
 
         {/* PERSONAL DETAILS */}
         <div className="mt-6 border p-4 rounded">
-          <h3 className="font-semibold border-b pb-1 mb-3">Personal Details</h3>
+          <div className="border-b pb-1 mb-3 flex items-center justify-between">
+            <h3 className="font-semibold">Personal Details</h3>
+            <p className="text-lg font-extrabold">
+              Roll Number: {data.roll_number}
+            </p>
+          </div>
 
           <div className="grid grid-cols-3 gap-4">
 
@@ -128,6 +133,26 @@ function SuccessPageInner() {
               <p><b>Father's Name:</b> {form.fatherName}</p>
               <p><b>Phone:</b> {form.phone}</p>
               <p><b>Category:</b> {form.category}</p>
+              <p>
+                <b>CTET Level:</b>{' '}
+                {(() => {
+                  const rawLevel = form.ctetLevel || ''
+                  const subject = form.subject || ''
+
+                  if (!rawLevel) return ''
+
+                  const levelLabel =
+                    rawLevel === '1-5'
+                      ? 'Class 1-5'
+                      : rawLevel === '6-8'
+                      ? 'Class 6-8'
+                      : rawLevel
+
+                  return subject && rawLevel === '6-8'
+                    ? `${levelLabel} / ${subject}`
+                    : levelLabel
+                })()}
+              </p>
             </div>
 
             {/* PHOTO + SIGN */}
@@ -147,6 +172,7 @@ function SuccessPageInner() {
 
           <div className="text-sm space-y-2">
             <p><b>Exam Date:</b> {form.slot}</p>
+            <p><b>Exam Time:</b> 3:00 PM</p>
             <p><b>Mode:</b> Offline</p>
             <p><b>Venue:</b> Ajay CTET Classes, Gokul Chowk, Saharsa</p>
           </div>
@@ -159,7 +185,8 @@ function SuccessPageInner() {
           <div className="text-xs text-gray-700 space-y-1 leading-relaxed">
             <p>• Carry this admit card to the exam center</p>
             <p>• Bring a valid ID proof</p>
-            <p>• Reach the venue at least 30 minutes early</p>
+            <p>• Ensure you reach the exam center by 2:30 PM</p>
+            <p>• The examination will commence at 3:00 PM</p>
             <p>• Calculators, mobile phones, and electronic devices are strictly prohibited</p>
             <p>• Do not carry any unfair materials or notes inside the examination hall</p>
             <p>• Follow all instructions given by invigilators</p>

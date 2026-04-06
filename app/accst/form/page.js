@@ -133,7 +133,18 @@ function FormPageInner() {
               <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" className="w-full border p-3 rounded-lg" />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 
-              <input type="date" name="dob" value={form.dob} onChange={handleChange} className="w-full border p-3 rounded-lg" />
+              <div>
+                <label className="text-sm text-gray-600 block mb-1">
+                  Date of Birth (DD/MM/YYYY)
+                </label>
+                <input
+                  type="date"
+                  name="dob"
+                  value={form.dob}
+                  onChange={handleChange}
+                  className="w-full border p-3 rounded-lg"
+                />
+              </div>
               {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
 
               <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" className="w-full border p-3 rounded-lg" />

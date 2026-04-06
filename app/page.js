@@ -101,18 +101,18 @@ export default function Home() {
             {/* Contact */}
             <div className="space-y-1">
               <p>
-                Email: <a href="mailto:ajayctetclasses@gmail.com" className="underline cursor-pointer hover:opacity-90">ajayctetclasses@gmail.com</a>
+                Email: <a href="mailto:support@ajayctetclasses.in" className="underline cursor-pointer hover:opacity-90">support@ajayctetclasses.in</a>
               </p>
               <p>
-                Phone: <a href="tel:+919000000000" className="underline">+91 9000000000</a>
+                Phone: <a href="tel:01169272938" className="underline">011 692 729 38</a>
               </p>
             </div>
 
             {/* Social */}
             <div className="flex gap-4">
-              <a href="#" className="hover:underline">YouTube</a>
-              <a href="#" className="hover:underline">Facebook</a>
-              <a href="#" className="hover:underline">Instagram</a>
+              <a href="https://youtube.com/@ajayctetclasses?si=g0BMOpn6nnwdwHBp" className="hover:underline">YouTube</a>
+              <a href="https://www.facebook.com/profile.php?id=100064956731017" className="hover:underline">Facebook</a>
+              <a href="https://www.instagram.com/ajayctetclasses?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" className="hover:underline">Instagram</a>
             </div>
 
           </div>

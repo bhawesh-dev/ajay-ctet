@@ -46,9 +46,37 @@ export async function POST(req) {
       return Response.json({ error: appError.message })
     }
 
+    // 5. generate sequential roll number
+    const appId = appData.id
+
+    // get last roll sequence
+    const { data: maxData } = await supabaseAdmin
+      .from('applications')
+      .select('roll_seq')
+      .order('roll_seq', { ascending: false })
+      .limit(1)
+
+    const nextSeq = (maxData?.[0]?.roll_seq || 0) + 1
+
+    const rollNumber = `ACCST26-${String(nextSeq).padStart(4, '0')}`
+
+    // 6. save roll number + sequence
+    const { error: rollError } = await supabaseAdmin
+      .from('applications')
+      .update({
+        roll_number: rollNumber,
+        roll_seq: nextSeq
+      })
+      .eq('id', appId)
+
+    if (rollError) {
+      return Response.json({ error: rollError.message })
+    }
+
     return Response.json({
       message: 'Payment verified',
-      token
+      token,
+      roll_number: rollNumber
     })
 
   } catch (err) {

@@ -326,7 +326,11 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
       <section className="px-4 py-10 text-center">
 
         <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
-          Apply early for better chances of scholarship ⚡
+          Offer valid upto 1000 admissions
+        </p>
+
+        <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
+          Apply Early⚡
         </p>
 
         <button
@@ -453,9 +457,9 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
 
           {/* Social */}
           <div className="flex gap-4">
-            <a href="#" className="hover:underline">YouTube</a>
-            <a href="#" className="hover:underline">Facebook</a>
-            <a href="#" className="hover:underline">Instagram</a>
+            <a href="https://youtube.com/@ajayctetclasses?si=g0BMOpn6nnwdwHBp" className="hover:underline">YouTube</a>
+            <a href="https://www.facebook.com/profile.php?id=100064956731017" className="hover:underline">Facebook</a>
+            <a href="https://www.instagram.com/ajayctetclasses?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw==" className="hover:underline">Instagram</a>
           </div>
 
         </div>
