@@ -49,14 +49,19 @@ export async function POST(req) {
     // 5. generate sequential roll number
     const appId = appData.id
 
-    // get last roll sequence
-    const { data: maxData } = await supabaseAdmin
-      .from('applications')
-      .select('roll_seq')
-      .order('roll_seq', { ascending: false })
-      .limit(1)
+    // get total number of applications (safe sequence)
+    // count only rows where roll_seq is already assigned (ignore nulls)
+const { count, error: countError } = await supabaseAdmin
+  .from('applications')
+  .select('roll_seq', { count: 'exact', head: true })
+  .not('roll_seq', 'is', null)
 
-    const nextSeq = (maxData?.[0]?.roll_seq || 0) + 1
+if (countError) {
+  return Response.json({ error: countError.message })
+}
+
+// next sequence = assigned count + 1
+const nextSeq = (count || 0) + 1
 
     const rollNumber = `ACCST26-${String(nextSeq).padStart(4, '0')}`
 
