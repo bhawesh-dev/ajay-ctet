@@ -133,18 +133,14 @@ function FormPageInner() {
               <input name="name" value={form.name} onChange={handleChange} placeholder="Full Name" className="w-full border p-3 rounded-lg" />
               {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
 
-              <div>
-                <label className="text-sm text-gray-600 block mb-1">
-                  Date of Birth (DD/MM/YYYY)
-                </label>
-                <input
-                  type="date"
-                  name="dob"
-                  value={form.dob}
-                  onChange={handleChange}
-                  className="w-full border p-3 rounded-lg"
-                />
-              </div>
+              <input
+                type="date"
+                name="dob"
+                value={form.dob}
+                onChange={handleChange}
+                placeholder="Date of Birth (DD/MM/YY)"
+                className="w-full border p-3 rounded-lg"
+              />
               {errors.dob && <p className="text-red-500 text-sm">{errors.dob}</p>}
 
               <input name="phone" value={form.phone} onChange={handleChange} placeholder="Phone Number" className="w-full border p-3 rounded-lg" />
@@ -219,8 +215,8 @@ function FormPageInner() {
 
               <select name="degree" value={form.degree} onChange={handleChange} className="w-full border p-3 rounded-lg">
                 <option value="">Select Degree</option>
-                <option value="DLED">DLED</option>
-                <option value="BED">BED</option>
+                <option value="DLED">D.El.Ed</option>
+                <option value="BED">B.Ed</option>
               </select>
               {errors.degree && <p className="text-red-500 text-sm">{errors.degree}</p>}
 
