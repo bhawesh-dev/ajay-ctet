@@ -13,6 +13,7 @@ export default function ACCST() {
   const [errors, setErrors] = useState({})
   const videoRef = useRef(null)
   const [loading, setLoading] = useState(false)
+  const [paymentInProgress, setPaymentInProgress] = useState(false)
   const [statusMessage, setStatusMessage] = useState('')
   const router = useRouter()
   const pathname = usePathname()
@@ -21,6 +22,17 @@ export default function ACCST() {
     setShowModal(false)
     setErrors({})
   }, [pathname])
+
+  useEffect(() => {
+    const handleBeforeUnload = (e) => {
+      if (paymentInProgress) {
+        e.preventDefault()
+        e.returnValue = ''
+      }
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload)
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload)
+  }, [paymentInProgress])
 
   
   
@@ -63,105 +75,128 @@ export default function ACCST() {
     }
   }
 
+  let timeoutId
   const handleSubmit = async () => {
-  if (loading) return  // 🚨 prevent double click
-  if (!validate()) return
+    if (loading) return  // 🚨 prevent double click
+    if (!validate()) return
 
-  setLoading(true)
+    setLoading(true)
+    setPaymentInProgress(true)
 
-  try {
+    try {
+      const resumeRes = await fetch('/api/resume-application', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ phone: form.phone })
+      })
 
-    const resumeRes = await fetch('/api/resume-application', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({ phone: form.phone })
-})
+      const resumeData = await resumeRes.json()
 
-const resumeData = await resumeRes.json()
-
-// CASE: already completed
-if (resumeData.type === 'completed') {
-  setStatusMessage('Application already completed. Redirecting...')
-  setTimeout(() => {
-    router.push(`/accst/success?token=${resumeData.token}`)
-  }, 1000)
-  return
-}
-
-// CASE: resume or paid resume
-if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
-  setStatusMessage('Resuming your application...')
-  setTimeout(() => {
-    router.push(`/accst/form?token=${resumeData.token}`)
-  }, 1000)
-  return
-}
-    const res = await fetch('/api/apply', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(form)
-    })
-
-    const data = await res.json()
-    if (data.error) {
-      alert(data.error)
-      setLoading(false)
-      return
-    }
-
-    const user = data.user
-
-    const orderRes = await fetch('/api/create-order', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ user_id: user.id })
-    })
-
-    const orderData = await orderRes.json()
-    if (orderData.error) {
-      alert(orderData.error)
-      setLoading(false)
-      return
-    }
-
-    const options = {
-      key: orderData.key,
-      amount: 10000,
-      currency: 'INR',
-      name: 'Ajay CTET Classes',
-      description: 'ACCST Test Fee',
-      order_id: orderData.order_id,
-
-      handler: async function (response) {
-        const verifyRes = await fetch('/api/verify-payment', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            order_id: response.razorpay_order_id
-          })
-        })
-
-        const verifyData = await verifyRes.json()
-
-        if (verifyData.error) {
-          alert('Payment verification failed')
-          setLoading(false)
-          return
-        }
-
-        router.push(`/accst/form?token=${verifyData.token}`)
+      // CASE: already completed
+      if (resumeData.type === 'completed') {
+        setStatusMessage('Application already completed. Redirecting...')
+        clearTimeout(timeoutId)
+        setTimeout(() => {
+          router.push(`/accst/success?token=${resumeData.token}`)
+        }, 1000)
+        setPaymentInProgress(false)
+        return
       }
+
+      // CASE: resume or paid resume
+      if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
+        setStatusMessage('Resuming your application...')
+        clearTimeout(timeoutId)
+        setTimeout(() => {
+          router.push(`/accst/form?token=${resumeData.token}`)
+        }, 1000)
+        setPaymentInProgress(false)
+        return
+      }
+      const res = await fetch('/api/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form)
+      })
+
+      const data = await res.json()
+      if (data.error) {
+        alert(data.error)
+        setLoading(false)
+        setPaymentInProgress(false)
+        return
+      }
+
+      const user = data.user
+
+      const orderRes = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.id })
+      })
+
+      const orderData = await orderRes.json()
+      if (orderData.error) {
+        alert(orderData.error)
+        setLoading(false)
+        setPaymentInProgress(false)
+        return
+      }
+
+      const options = {
+        key: orderData.key,
+        amount: 10000,
+        currency: 'INR',
+        name: 'Ajay CTET Classes',
+        description: 'ACCST Test Fee',
+        order_id: orderData.order_id,
+        modal: {
+          ondismiss: function () {
+            clearTimeout(timeoutId)
+            alert('Payment cancelled or failed. Please try again.')
+            setPaymentInProgress(false)
+            setLoading(false)
+          }
+        },
+        handler: async function (response) {
+          clearTimeout(timeoutId)
+          const verifyRes = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id
+            })
+          })
+
+          const verifyData = await verifyRes.json()
+
+          if (verifyData.error) {
+            alert('Payment verification failed')
+            setLoading(false)
+            setPaymentInProgress(false)
+            return
+          }
+
+          router.push(`/accst/form?token=${verifyData.token}`)
+        }
+      }
+
+      localStorage.setItem('payment_phone', form.phone)
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+      timeoutId = setTimeout(() => {
+        alert('If your payment is deducted but the form does not open, please use the "Already paid? Click here" option.')
+      }, 60000)
+
+    } catch (err) {
+      console.log(err)
+      alert('Something went wrong')
+      setLoading(false)
+      setPaymentInProgress(false)
     }
-
-    const rzp = new window.Razorpay(options)
-    rzp.open()
-
-  } catch (err) {
-    console.log(err)
-    alert('Something went wrong')
-    setLoading(false)
   }
-}
 
   return (
     <div className="min-h-screen bg-[#e3eeff] text-black pt-16">
@@ -220,7 +255,7 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
             controls
             className="w-full aspect-video rounded-xl shadow"
           >
-            <source src="/video.mp4" />
+            <source src="https://res.cloudinary.com/dc1d9ynpp/video/upload/f_auto,q_auto/video_ihs3dr.mp4" />
           </video>
         </div>
 
@@ -354,6 +389,12 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
               Apply for ACCST
             </h2>
 
+            {paymentInProgress && (
+              <div className="bg-red-100 text-red-700 p-3 rounded-lg mb-3 text-sm">
+                ⚠️ Do NOT refresh or close this page while payment is in progress.
+              </div>
+            )}
+
             <div className="space-y-4">
 
               {/* Name */}
@@ -400,20 +441,65 @@ if (resumeData.type === 'resume' || resumeData.type === 'paid_resume') {
               </p>
             )}
 
+
+                        <div className="text-sm text-gray-600 text-center mt-2">
+              Already paid but form didn’t open?
+              <button
+                onClick={async () => {
+                  try {
+                    if (!form.phone) {
+                      alert('Please enter the same details used during payment.')
+                      return
+                    }
+
+                    const res = await fetch('/api/resume-application', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ phone: form.phone })
+                    })
+
+                    const data = await res.json()
+
+                    if (data.type === 'completed') {
+                      router.push(`/accst/success?token=${data.token}`)
+                      return
+                    }
+
+                    if (data.type === 'resume' || data.type === 'paid_resume') {
+                      router.push(`/accst/form?token=${data.token}`)
+                      return
+                    }
+
+                    alert('No payment found. Please use the same phone number.')
+                  } catch (err) {
+                    alert('Something went wrong. Please try again.')
+                  }
+                }}
+                className="text-blue-600 underline ml-1 cursor-pointer"
+              >
+                Click here
+              </button>
+            </div>
+
             {/* Buttons */}
             <div className="mt-6 space-y-3">
 
               <button
-  onClick={handleSubmit}
-  disabled={loading}
-  className={`w-full py-3 rounded-lg font-semibold transition ${
-    loading 
-      ? 'bg-gray-400 cursor-not-allowed' 
-      : 'bg-yellow-400 hover:scale-[1.02] hover:shadow-lg active:scale-95 cursor-pointer'
-  }`}
->
-  {loading ? 'Processing...' : 'Continue'}
-</button>
+                onClick={handleSubmit}
+                disabled={loading}
+                className={`w-full py-3 rounded-lg font-semibold transition ${
+                  loading 
+                    ? 'bg-gray-400 cursor-not-allowed' 
+                    : 'bg-yellow-400 hover:scale-[1.02] hover:shadow-lg active:scale-95 cursor-pointer'
+                }`}
+              >
+                {loading ? 'Processing payment...' : 'Continue'}
+              </button>
+              {loading && (
+                <p className="text-sm text-blue-600 text-center mt-2">
+                  Payment done but not redirected? Please wait or retry shortly.
+                </p>
+              )}
 
               <button
                 onClick={() => setShowModal(false)}

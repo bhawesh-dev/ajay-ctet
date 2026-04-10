@@ -8,6 +8,7 @@ function SuccessPageInner() {
   const router = useRouter()
   const token = params.get('token')
   console.log('TOKEN:', token)
+  console.log('Success Page Token:', token)
 
   const [loading, setLoading] = useState(true)
   const [data, setData] = useState(null)
@@ -27,7 +28,12 @@ function SuccessPageInner() {
           console.log('API Error:', result.error)
           setData(null)
         } else {
-          setData(result.application)
+          if (!result.application || !result.application.roll_number) {
+            console.log('Invalid application data')
+            setData(null)
+          } else {
+            setData(result.application)
+          }
         }
 
         setLoading(false)
@@ -37,7 +43,11 @@ function SuccessPageInner() {
       }
     }
 
-    if (token) fetchData()
+    if (!token) {
+      setLoading(false)
+      return
+    }
+    fetchData()
   }, [token])
 
   if (loading) {
@@ -65,7 +75,10 @@ function SuccessPageInner() {
   if (!data) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center gap-4">
-        <p className="text-lg text-red-500">Unable to fetch your application.</p>
+        <p className="text-lg text-red-500 text-center">
+          Invalid or incomplete application. If your payment was deducted but this page is not loading,
+          please go back and use the "Already paid? Click here" option.
+        </p>
         <button
           onClick={() => router.push('/accst')}
           className="px-4 py-2 bg-blue-600 text-white rounded"
@@ -95,6 +108,16 @@ function SuccessPageInner() {
         </p>
       </div>
 
+      <div className="mb-4 text-sm text-gray-600 text-center no-print">
+        Facing issues loading your admit card?
+        <button
+          onClick={() => router.push('/accst')}
+          className="text-blue-600 underline ml-1 cursor-pointer"
+        >
+          Go back and retry
+        </button>
+      </div>
+
       {/* ADMIT CARD */}
       <div
         id="admit-card"
@@ -121,7 +144,7 @@ function SuccessPageInner() {
           <div className="border-b pb-1 mb-3 flex items-center justify-between">
             <h3 className="font-semibold">Personal Details</h3>
             <p className="text-lg font-extrabold">
-              Roll Number: {data.roll_number}
+              Roll Number: {data.roll_number || 'Not Generated'}
             </p>
           </div>
 

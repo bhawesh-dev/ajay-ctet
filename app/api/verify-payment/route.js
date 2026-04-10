@@ -3,7 +3,24 @@ import supabaseAdmin from '@/lib/supabaseAdmin'
 export async function POST(req) {
   try {
     const body = await req.json()
-    const { order_id } = body
+    const {
+      razorpay_order_id,
+      razorpay_payment_id,
+      order_id: legacy_order_id
+    } = body
+
+    const order_id = razorpay_order_id || legacy_order_id
+
+    console.log("VERIFY START", order_id)
+    console.log("RAZORPAY PAYMENT ID", razorpay_payment_id)
+
+    if (!order_id) {
+      return Response.json({ error: 'Order ID missing' })
+    }
+
+    if (!razorpay_payment_id) {
+      console.log("MISSING PAYMENT ID")
+    }
 
     // 1. find payment
     const { data: payment, error } = await supabaseAdmin
@@ -19,11 +36,31 @@ export async function POST(req) {
     // 2. mark as paid (simulate Razorpay success)
     const { error: updateError } = await supabaseAdmin
       .from('payments')
-      .update({ status: 'paid' })
+      .update({
+        status: 'paid',
+        payment_id: razorpay_payment_id || payment.payment_id
+      })
       .eq('order_id', order_id)
 
     if (updateError) {
       return Response.json({ error: updateError.message })
+    }
+
+    console.log("PAYMENT UPDATED SUCCESSFULLY")
+
+    // prevent duplicate application creation
+    const { data: existingApp } = await supabaseAdmin
+      .from('applications')
+      .select('*')
+      .eq('user_id', payment.user_id)
+      .single()
+
+    if (existingApp) {
+      return Response.json({
+        message: 'Application already exists',
+        token: existingApp.token,
+        roll_number: existingApp.roll_number
+      })
     }
 
     // 3. generate token
