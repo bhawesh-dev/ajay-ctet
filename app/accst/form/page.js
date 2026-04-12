@@ -245,7 +245,6 @@ function FormPageInner() {
 
               <select name="slot" value={form.slot} onChange={handleChange} className="w-full border p-3 rounded-lg">
                 <option value="">Select Exam Slot</option>
-                <option>12 April</option>
                 <option>19 April</option>
                 <option>26 April</option>
               </select>
