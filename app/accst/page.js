@@ -9,6 +9,7 @@ import { supabase } from '@/lib/supabase'
 export default function ACCST() {
   
   const [showModal, setShowModal] = useState(false)
+  const [showTutorial, setShowTutorial] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', email: '' })
   const [errors, setErrors] = useState({})
   const videoRef = useRef(null)
@@ -214,7 +215,7 @@ export default function ACCST() {
         </div>
         <button
           onClick={() => {
-            setShowModal(true)
+            setShowTutorial(true)
             if (videoRef.current) videoRef.current.pause()
           }}
           className="bg-yellow-400 text-black px-4 py-2 rounded-md font-semibold active:scale-95 cursor-pointer transition hover:scale-[1.05] hover:shadow-md"
@@ -264,7 +265,7 @@ export default function ACCST() {
 
           <button
             onClick={() => {
-              setShowModal(true)
+              setShowTutorial(true)
               if (videoRef.current) videoRef.current.pause()
             }}
             className="w-full md:flex-1 bg-blue-700 text-white py-3 md:py-5 md:px-6 rounded-lg md:rounded-sm font-semibold active:scale-95 cursor-pointer transition hover:scale-[1.02] hover:shadow-lg"
@@ -370,7 +371,7 @@ export default function ACCST() {
 
         <button
           onClick={() => {
-            setShowModal(true)
+            setShowTutorial(true)
             if (videoRef.current) videoRef.current.pause()
           }}
           className="bg-yellow-400 text-black px-8 py-4 rounded-md font-bold text-lg animate-pulse active:scale-95 cursor-pointer transition hover:scale-[1.03] hover:shadow-xl"
@@ -379,6 +380,37 @@ export default function ACCST() {
         </button>
 
       </section>
+
+      {/* TUTORIAL MODAL */}
+      {showTutorial && (
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
+          <div className="bg-white p-6 rounded-2xl w-[90%] max-w-xl shadow-2xl border">
+
+            <h2 className="text-lg font-bold text-center mb-4">
+              Please watch this tutorial before applying
+            </h2>
+
+            <video
+              controls
+              autoPlay
+              className="w-full rounded-lg mb-4"
+            >
+              <source src="https://res.cloudinary.com/dc1d9ynpp/video/upload/v1776305530/tutorial_pqrqa7.mp4" />
+            </video>
+
+            <button
+              onClick={() => {
+                setShowTutorial(false)
+                setShowModal(true)
+              }}
+              className="w-full bg-yellow-400 text-black py-3 rounded-lg font-semibold hover:scale-[1.02] transition cursor-pointer"
+            >
+              Skip Tutorial & Continue
+            </button>
+
+          </div>
+        </div>
+      )}
 
       {/* MODAL */}
       {showModal && (
