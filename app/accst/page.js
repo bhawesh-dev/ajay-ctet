@@ -11,6 +11,7 @@ export default function ACCST() {
   const [showModal, setShowModal] = useState(false)
   const [showTutorial, setShowTutorial] = useState(false)
   const [form, setForm] = useState({ name: '', phone: '', email: '' })
+  const [leadForm, setLeadForm] = useState({ name: '', phone: '', email: '' })
   const [errors, setErrors] = useState({})
   const videoRef = useRef(null)
   const [loading, setLoading] = useState(false)
@@ -62,7 +63,6 @@ export default function ACCST() {
 
   const handleChange = (e) => {
     const { name, value } = e.target
-
     if (name === 'name') {
       if (/^[A-Za-z ]*$/.test(value)) {
         setForm(prev => ({ ...prev, [name]: value }))
@@ -73,6 +73,39 @@ export default function ACCST() {
       }
     } else {
       setForm(prev => ({ ...prev, [name]: value }))
+    }
+  }
+
+  const handleLeadChange = (e) => {
+    const { name, value } = e.target
+    if (name === 'name') {
+      if (/^[A-Za-z ]*$/.test(value)) {
+        setLeadForm(prev => ({ ...prev, [name]: value }))
+      }
+    } else if (name === 'phone') {
+      if (/^[0-9]*$/.test(value) && value.length <= 10) {
+        setLeadForm(prev => ({ ...prev, [name]: value }))
+      }
+    } else {
+      setLeadForm(prev => ({ ...prev, [name]: value }))
+    }
+  }
+  const handleLeadSubmit = async () => {
+    if (!leadForm.name || !leadForm.phone || !leadForm.email) {
+      alert('Please fill all details')
+      return
+    }
+
+    try {
+      const { error } = await supabase.from('leads').insert([leadForm])
+      if (error) {
+        alert('Something went wrong')
+        return
+      }
+      alert('We will contact you shortly!')
+      setLeadForm({ name: '', phone: '', email: '' })
+    } catch (err) {
+      alert('Error submitting form')
     }
   }
 
@@ -220,65 +253,60 @@ export default function ACCST() {
           }}
           className="bg-yellow-400 text-black px-4 py-2 rounded-md font-semibold active:scale-95 cursor-pointer transition hover:scale-[1.05] hover:shadow-md"
         >
-          Apply Now
+          Contact Us
         </button>
       </header>
 
       {/* HERO */}
       <section className="px-4 py-10 bg-[#dbeafe]">
         <div className="max-w-xl md:max-w-3xl mx-auto bg-white rounded-2xl shadow-xl border border-gray-200 p-8 md:p-10 text-center transform transition duration-300 hover:scale-[1.03] hover:shadow-2xl animate-[floaty_5s_ease-in-out_infinite] hover:[animation-play-state:paused]">
-
           <h1 className="text-2xl md:text-4xl font-bold leading-snug">
-            <span className="text-blue-900 font-extrabold text-3xl md:text-5xl">A</span>jay{' '}
-            <span className="text-blue-900 font-extrabold text-3xl md:text-5xl">C</span>TET{' '}
-            <span className="text-blue-900 font-extrabold text-3xl md:text-5xl">C</span>lasses{' '}
-            <span className="text-blue-900 font-extrabold text-3xl md:text-5xl">S</span>cholarship{' '}
-            <span className="text-blue-900 font-extrabold text-3xl md:text-5xl">T</span>est
+            ACCST Scholarship Test is Over
           </h1>
-
           <p className="mt-4 text-lg md:text-xl font-semibold text-gray-800">
-            ₹11,000 की कोचिंग अब सिर्फ ₹100 में
+            Admissions are now open for new batches
           </p>
-
           <p className="mt-2 text-red-600 md:text-lg font-semibold">
-            100% तक स्कॉलरशिप पाने का मौका
+            Apply now for direct admission in Ajay CTET Classes
           </p>
-
         </div>
 
-        {/* VIDEO inside HERO */}
-        <div className="max-w-xl md:max-w-3xl mx-auto mt-6">
-          <video
-            ref={videoRef}
-            autoPlay
-            loop
-            playsInline
-            controls
-            className="w-full aspect-video rounded-xl shadow"
-          >
-            <source src="https://res.cloudinary.com/dc1d9ynpp/video/upload/f_auto,q_auto/video_ihs3dr.mp4" />
-          </video>
-        </div>
+        
 
         {/* CTA BUTTONS inside HERO */}
-        <div className="max-w-xl md:max-w-3xl mx-auto flex flex-col md:flex-row gap-4 mt-8">
-
-          <button
-            onClick={() => {
-              setShowTutorial(true)
-              if (videoRef.current) videoRef.current.pause()
-            }}
-            className="w-full md:flex-1 bg-blue-700 text-white py-3 md:py-5 md:px-6 rounded-lg md:rounded-sm font-semibold active:scale-95 cursor-pointer transition hover:scale-[1.02] hover:shadow-lg"
-          >
-            Apply for ACCST (₹100)
-          </button>
-
-          <button
-          onClick={() => window.location.href = '/api/create-direct-order'}
-            className="w-full md:flex-1 bg-yellow-400 text-black py-3 md:py-5 md:px-6 rounded-lg md:rounded-sm font-semibold active:scale-95 cursor-pointer transition hover:scale-[1.02] hover:shadow-lg"
-          >
-            Direct Admission (₹11,000)
-          </button>
+        <div className="max-w-xl md:max-w-3xl mx-auto mt-8 bg-white p-6 rounded-xl shadow">
+          <h3 className="text-lg font-semibold mb-4 text-center">
+            Direct Admission Inquiry
+          </h3>
+          <div className="space-y-4">
+            <input
+              name="name"
+              value={leadForm.name}
+              onChange={handleLeadChange}
+              placeholder="Full Name"
+              className="w-full border p-3 rounded-lg"
+            />
+            <input
+              name="phone"
+              value={leadForm.phone}
+              onChange={handleLeadChange}
+              placeholder="Phone Number"
+              className="w-full border p-3 rounded-lg"
+            />
+            <input
+              name="email"
+              value={leadForm.email}
+              onChange={handleLeadChange}
+              placeholder="Email Address"
+              className="w-full border p-3 rounded-lg"
+            />
+            <button
+              onClick={handleLeadSubmit}
+              className="w-full bg-yellow-400 py-3 rounded-lg font-semibold"
+            >
+              Submit & Get Call Back
+            </button>
+          </div>
         </div>
       </section>
 
@@ -289,100 +317,9 @@ export default function ACCST() {
 }
 `}</style>
 
-      {/* HOW IT WORKS */}
-      <section className="px-4 py-10 text-center">
-        <h2 className="text-2xl md:text-3xl font-extrabold mb-8 text-blue-900">
-          कैसे मिलेगा डिस्काउंट?
-        </h2>
-
-        <div className="max-w-xl mx-auto flex flex-col items-center gap-4">
-
-          {/* Card 1 */}
-          <div className="w-full bg-yellow-100 p-4 rounded-xl shadow-md border border-yellow-300">
-            ₹100 देकर टेस्ट दें
-          </div>
-
-          <div className="text-3xl">⬇️</div>
-
-          {/* Card 2 */}
-          <div className="w-full bg-yellow-400 p-5 rounded-2xl shadow-2xl border-2 border-yellow-500 transform scale-[1.03]">
-            <div className="font-semibold text-lg">आपका स्कोर = आपकी स्कॉलरशिप</div>
-          </div>
-
-          <div className="text-3xl">⬇️</div>
-
-          {/* Card 3 */}
-          <div className="w-full bg-yellow-100 p-4 rounded-xl shadow-md border border-yellow-300">
-            बैच में एडमिशन लें
-          </div>
-
-        </div>
-      </section>
-
-      {/* EXAM DETAILS */}
-      <section className="px-4 py-12">
-        <h2 className="text-center text-2xl md:text-3xl font-extrabold mb-10 text-blue-900">
-          Exam Details
-        </h2>
-
-        <div className="max-w-xl md:max-w-3xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-5">
-
-          <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-blue-700">
-            <p className="text-sm text-gray-500">Subjects</p>
-            <p className="font-semibold mt-1">Hindi, English, Maths</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-yellow-400">
-            <p className="text-sm text-gray-500">Exam Dates</p>
-            <p className="font-semibold mt-1">12, 19, 26 April</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-green-600">
-            <p className="text-sm text-gray-500">Mode</p>
-            <p className="font-semibold mt-1">Offline</p>
-          </div>
-
-          <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-purple-600">
-            <p className="text-sm text-gray-500">Venue</p>
-            <p className="font-semibold mt-1">Ajay CTET Classes, Gokul Chowk, Gangjala, Saharsa</p>
-          </div>
-
-        </div>
-      </section>
-
-
-      {/* POSTER */}
-      <section className="px-4 py-6">
-        <div className="max-w-xl md:max-w-3xl mx-auto">
-          <img src="/poster.jpg" className="w-full rounded-xl shadow" />
-        </div>
-      </section>
-
-      {/* FINAL CTA */}
-      <section className="px-4 py-10 text-center">
-
-        <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
-          Offer valid upto 1000 admissions
-        </p>
-
-        <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
-          Apply Early⚡
-        </p>
-
-        <button
-          onClick={() => {
-            setShowTutorial(true)
-            if (videoRef.current) videoRef.current.pause()
-          }}
-          className="bg-yellow-400 text-black px-8 py-4 rounded-md font-bold text-lg animate-pulse active:scale-95 cursor-pointer transition hover:scale-[1.03] hover:shadow-xl"
-        >
-          Apply Now (₹100)
-        </button>
-
-      </section>
 
       {/* TUTORIAL MODAL */}
-      {showTutorial && (
+      {false && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
           <div className="bg-white p-6 rounded-2xl w-[90%] max-w-xl shadow-2xl border">
 
