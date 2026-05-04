@@ -237,11 +237,11 @@ export default function ACCST() {
           </h1>
 
           <p className="mt-4 text-lg md:text-xl font-semibold text-gray-800">
-            ₹11,000 की कोचिंग अब सिर्फ ₹100 में
+            🎯 Golden Opportunity to get scholarship in Ajay CTET Classes
           </p>
 
           <p className="mt-2 text-red-600 md:text-lg font-semibold">
-            100% तक स्कॉलरशिप पाने का मौका
+            Limited seats Availabe – जल्दी Apply करें
           </p>
 
         </div>
@@ -334,7 +334,7 @@ export default function ACCST() {
 
           <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-yellow-400">
             <p className="text-sm text-gray-500">Exam Dates</p>
-            <p className="font-semibold mt-1">12, 19, 26 April</p>
+            <p className="font-semibold mt-1">12 April, 19 April, 26 April, 17 May</p>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-green-600">
@@ -361,13 +361,16 @@ export default function ACCST() {
       {/* FINAL CTA */}
       <section className="px-4 py-10 text-center">
 
-        <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
-          Offer valid upto 1000 admissions
-        </p>
-
-        <p className="mb-4 text-lg md:text-xl font-semibold text-red-600">
-          Apply Early⚡
-        </p>
+        <div className="mb-4 flex justify-center">
+          <div className="bg-blue-900 text-white px-5 py-2 rounded-full font-semibold flex items-center gap-1 animate-bounce">
+            🚀 जल्दी apply करें, seats भर रही हैं
+            <span className="flex gap-[2px] ml-1">
+              <span className="w-1 h-1 bg-white rounded-full animate-pulse"></span>
+              <span className="w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:200ms]"></span>
+              <span className="w-1 h-1 bg-white rounded-full animate-pulse [animation-delay:400ms]"></span>
+            </span>
+          </div>
+        </div>
 
         <button
           onClick={() => {
@@ -378,6 +381,10 @@ export default function ACCST() {
         >
           Apply Now (₹100)
         </button>
+
+        <p className="mt-4 text-lg text-red-600 font-semibold">
+          🔥 Offer valid upto 1000 admissions
+        </p>
 
       </section>
 
