@@ -334,7 +334,7 @@ export default function ACCST() {
 
           <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-yellow-400">
             <p className="text-sm text-gray-500">Exam Dates</p>
-            <p className="font-semibold mt-1">12 April, 19 April, 26 April, 17 May</p>
+            <p className="font-semibold mt-1">12 April, 19 April, 26 April, 17 May, 31 May</p>
           </div>
 
           <div className="bg-white p-5 rounded-xl shadow-md border-l-4 border-green-600">
