@@ -7,6 +7,8 @@ import { supabase } from '@/lib/supabase'
 
 
 export default function ACCST() {
+  // Change to false when scholarship registrations are closed
+  const SCHOLARSHIP_OPEN = false
   
   const [showModal, setShowModal] = useState(false)
   const [showTutorial, setShowTutorial] = useState(false)
@@ -18,6 +20,61 @@ export default function ACCST() {
   const [statusMessage, setStatusMessage] = useState('')
   const router = useRouter()
   const pathname = usePathname()
+
+  if (!SCHOLARSHIP_OPEN) {
+    return (
+      <div className="min-h-screen bg-[#e3eeff] text-black pt-16">
+        <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 md:px-8 py-3 bg-blue-900/90 backdrop-blur text-white shadow">
+          <div className="flex items-center gap-2">
+            <img src="/logo.PNG" alt="logo" className="w-8 h-8 rounded-full" />
+            <span className="font-semibold">Ajay CTET Classes</span>
+          </div>
+        </header>
+
+        <section className="px-4 py-20 flex items-center justify-center">
+          <div className="max-w-2xl w-full bg-white rounded-2xl shadow-xl p-8 md:p-12 text-center ">
+            <h1 className="text-3xl md:text-3xl font-bold text-blue-900 mb-4">
+              Ajay CTET Classes Scholarship Test Closed
+            </h1>
+
+            <p className="text-lg text-gray-700 mb-4">
+              The current scholarship cycle has ended.
+            </p>
+
+            <p className="text-red-600 font-semibold mb-8">
+              Follow our social media channels for updates on future scholarship tests and admissions.
+            </p>
+
+            <div className="flex flex-col md:flex-row gap-4 justify-center cursor-pointer">
+              <a
+                href="https://youtube.com/@ajayctetclasses?si=g0BMOpn6nnwdwHBp"
+                target="_blank"
+                className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold"
+              >
+                YouTube
+              </a>
+
+              <a
+                href="https://www.instagram.com/ajayctetclasses?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                target="_blank"
+                className="bg-pink-600 text-white px-6 py-3 rounded-lg font-semibold cursor-pointer"
+              >
+                Instagram
+              </a>
+
+              <a
+                href="https://www.facebook.com/profile.php?id=100064956731017"
+                target="_blank"
+                className="bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold cursor-pointer"
+              >
+                Facebook
+              </a>
+            </div>
+          </div>
+        </section>
+      </div>
+    )
+  }
 
   useEffect(() => {
     setShowModal(false)
