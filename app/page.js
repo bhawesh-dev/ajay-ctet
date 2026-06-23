@@ -125,7 +125,7 @@ export default function Home() {
       aria-label="ACC GS Academy home"
     >
       <Image
-        src="/logo.png"
+        src="/logo.PNG"
         alt="ACC GS Academy"
         width={40}
         height={40}
@@ -243,7 +243,7 @@ export default function Home() {
   </div>
   <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/10 p-2">
     <Image
-      src="/logo.png"
+      src="/logo.PNG"
       alt="ACC GS Academy"
       width={40}
       height={40}
@@ -578,7 +578,7 @@ export default function Home() {
         <div className="mx-auto flex max-w-7xl flex-col gap-5 text-sm sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-3 text-white">
             <Image
-        src="/logo.png"
+        src="/logo.PNG"
         alt="ACC GS Academy"
         width={40}
         height={40}
