@@ -32,7 +32,7 @@ export const metadata = {
     follow: true,
   },
   icons: {
-    icon: '/icon.svg',
+    icon: '/logo.PNG',
   },
 }
 
