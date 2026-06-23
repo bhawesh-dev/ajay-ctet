@@ -20,7 +20,7 @@ export default function Home() {
       <header className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-4 py-3 bg-blue-900/90 backdrop-blur text-white shadow-lg">
         <button onClick={() => window.location.href = '/'} className="flex items-center gap-2 cursor-pointer">
           <img src="/logo.PNG" alt="logo" className="w-8 h-8 rounded-full" />
-          <h1 className="text-lg font-bold">Ajay CTET Classes</h1>
+          <h1 className="text-lg font-bold">ACC GS Academy</h1>
         </button>
 
         <button
